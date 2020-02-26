@@ -33,6 +33,7 @@ class App extends Component {
         this.props.history.push('/');
     };
     render() {
+        const API_KEY=`${process.env.REACT_GOOGLE_LOGIN_KEY}`;
         if(this.props.location.state == null){
             return <Redirect to={{
                 pathname:'/',
@@ -43,24 +44,27 @@ class App extends Component {
         return (
             <div>
                 <div style={{marginBottom:10}}>
-                    <nav className="navbar navbar-expand-sm bg-light  nav-fill w-100">
+                    <nav className="navbar navbar-expand-sm bg-light nav-fill w-100" >
                         <div className="navbar-brand">
                             <h1>Music Master</h1>
                         </div>
-                        <div className="nav-item">
-                            <img src={profile.imageUrl} alt="Profile"  style={{
-                                width:40,
-                                height:40
-                            }}/>
-                        </div>
+                        {/* <div className="nav-item">
+                            
+                        </div> */}
                         {/*<div className="nav-item">*/}
                         {/*</div>*/}
-                        <div className="nav-item">
-                            <h3>{profile.name}</h3>
+                        <div className="nav-item justify-content-center">
+                        <img src={profile.imageUrl} alt="Profile"  style={{
+                                width:40,
+                                height:40,
+                                display:"inline-flex"
+                            }}/>
+                            <h3 style={{display:"inline-flex",marginLeft:5}}>{profile.name}</h3>
                             <p>{profile.email}</p>
                         </div>
-                        <div className="nav-item" >
+                        <div className="navbar-brand" >
                             <GoogleLogout
+                            clientId={API_KEY}
                                 buttonText="Logout"
                                 onLogoutSuccess={this.Logout}
                             />

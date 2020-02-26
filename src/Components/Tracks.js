@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Pagination from "react-js-pagination";
-
+import TrackSearch from './TrackSearch';
 class Tracks extends Component {
     state = {
         playing: false,
@@ -10,27 +10,30 @@ class Tracks extends Component {
         audio: null,
         playingPreviewUrl: null,
         searchedTracks: [],
-        TracksQeury: "",
     };
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.props.tracks !== prevProps.tracks) {
-            this.setState({TracksQeury: "", searchedTracks: this.props.tracks});
+            this.setState({ searchedTracks: this.props.tracks});
         }
     }
-    updateTrackQuery = event => {
-        this.setState({activePage: 1});
-        this.state.TracksQeury = event.target.value;
-        if (this.state.TracksQeury === "") {
+    // updateTrackQuery = event => {
+    //     this.setState({activePage: 1});
+    //     this.state.TracksQeury = event.target.value;
+    //     if (this.state.TracksQeury === "") {
+    //         this.setState({searchedTracks: this.props.tracks});
+    //     } else {
+    //         this.searchTracks();
+    //     }
+    // };
+    searchTracks = TracksQeury => {
+        if (TracksQeury === "") {
             this.setState({searchedTracks: this.props.tracks});
-        } else {
-            this.searchTracks();
+        } else {       
+            const searchedTracks = this.props.tracks.filter(
+                track => track.name.toLowerCase().indexOf(TracksQeury.toLowerCase()) !== -1
+            );
+            this.setState({searchedTracks: searchedTracks});
         }
-    };
-    searchTracks = () => {
-        const searchedTracks = this.props.tracks.filter(
-            track => track.name.toLowerCase().indexOf(this.state.TracksQeury.toLowerCase()) !== -1
-        );
-        this.setState({searchedTracks: searchedTracks});
     };
     playAudio = previewUrl => () => {
         const audio = new Audio(previewUrl);
@@ -67,13 +70,7 @@ class Tracks extends Component {
             <div>
                 <div>
                     <hr/>
-                    <div>
-                        <input
-                            placeholder="search for a Track"
-                            onChange={this.updateTrackQuery}
-                            value={this.state.TracksQeury}
-                        />
-                    </div>
+                    <TrackSearch searchTracks={this.searchTracks}/>
                     {this.state.searchedTracks.length ?
                         <div>
                             {
@@ -99,18 +96,18 @@ class Tracks extends Component {
                             <div>
                                 {/* from https://www.npmjs.com/package/react-js-pagination */}
                                 <Pagination className='pagination'
-                                            activePage={this.state.activePage}
-                                            itemsCountPerPage={this.state.itemsCountPerPage}
-                                            totalItemsCount={this.state.searchedTracks.length}
-                                            pageRangeDisplayed={5}
-                                            onChange={this.handlePageChange.bind(this)}
+                                    activePage={this.state.activePage}
+                                    itemsCountPerPage={this.state.itemsCountPerPage}
+                                    totalItemsCount={this.state.searchedTracks.length}
+                                    pageRangeDisplayed={5}
+                                    onChange={this.handlePageChange.bind(this)}
                                 />
                             </div>
                         </div>
                         :
                         <div>
                             <h3>Error</h3>
-                            <p>No Tracks Found for {this.state.TracksQeury}</p>
+                            <p>No Tracks Found </p>
                         </div>
                     }
                 </div>
