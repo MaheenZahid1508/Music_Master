@@ -26,6 +26,8 @@ class Tracks extends Component {
     //     }
     // };
     searchTracks = TracksQeury => {
+        this.setState({activePage: 1});
+
         if (TracksQeury === "") {
             this.setState({searchedTracks: this.props.tracks});
         } else {       
